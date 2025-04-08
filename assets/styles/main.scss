@@ -1,0 +1,7 @@
+@use "vuetify/settings" with (
+  $color-pack: true
+);
+
+@use "./colors" as *;
+@use "./variables" as *;
+@use "./mixins" as *;

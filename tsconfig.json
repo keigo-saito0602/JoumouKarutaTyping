@@ -1,0 +1,12 @@
+// tsconfig.json
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "types": ["node", "@nuxtjs/i18n"],
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"]
+    }
+  }
+}
