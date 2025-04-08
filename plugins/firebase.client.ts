@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
@@ -17,22 +18,23 @@ export default defineNuxtPlugin((nuxtApp) => {
   } = config.public;
 
   const firebaseApp = initializeApp({
-    apiKey: firebaseApiKey as string,
-    authDomain: firebaseAuthDomain as string,
-    projectId: firebaseProjectId as string,
-    storageBucket: firebaseStorageBucket as string,
-    messagingSenderId: firebaseMessagingSenderId as string,
-    appId: firebaseAppId as string,
-    measurementId: firebaseMeasurementId as string,
+    apiKey: firebaseApiKey,
+    authDomain: firebaseAuthDomain,
+    projectId: firebaseProjectId,
+    storageBucket: firebaseStorageBucket,
+    messagingSenderId: firebaseMessagingSenderId,
+    appId: firebaseAppId,
+    measurementId: firebaseMeasurementId,
   });
 
   const auth = getAuth(firebaseApp);
   const storage = getStorage(firebaseApp);
   const analytics = getAnalytics(firebaseApp);
+  const db = getFirestore(firebaseApp);
 
-  // Nuxtアプリに提供（どこでも使えるようにする）
   nuxtApp.provide("firebaseApp", firebaseApp);
   nuxtApp.provide("auth", auth);
   nuxtApp.provide("storage", storage);
   nuxtApp.provide("analytics", analytics);
+  nuxtApp.provide("db", db);
 });

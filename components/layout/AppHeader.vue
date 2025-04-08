@@ -2,10 +2,6 @@
   <v-app-bar app color="primary" dark>
     <v-toolbar-title>{{ $t("app.name") }}</v-toolbar-title>
     <v-spacer />
-    <NuxtLink to="/" class="mx-2">
-      <BaseButton :label="$t('header.home')" color="white" variant="outlined" />
-    </NuxtLink>
-
     <template v-if="auth.isLoggedIn">
       <NuxtLink to="/dashboard" class="mx-2">
         <BaseButton
@@ -14,6 +10,34 @@
           variant="outlined"
         />
       </NuxtLink>
+      <template v-if="gameStore.gameStatus === 'PLAYING'">
+        <div class="mr-4 text-primary text-h6 font-mono">
+          <i class="fa-solid fa-clock"></i> {{ gameStore.playTimeText }}
+        </div>
+        <div class="text-h6 font-weight-medium">
+          {{ gameStore.result }}枚 GET!
+        </div>
+      </template>
+      <template
+        v-else-if="['RANKING', 'RESULT'].includes(gameStore.gameStatus)"
+      >
+        <BaseButton
+          icon="mdi-home"
+          label="スタート画面"
+          color="primary"
+          variant="outlined"
+          @click="toTop"
+        />
+      </template>
+      <template v-else-if="gameStore.gameStatus === 'START'">
+        <BaseButton
+          icon="mdi-star"
+          label="ランキングを見る"
+          color="primary"
+          variant="outlined"
+          @click="toRanking"
+        />
+      </template>
     </template>
     <template v-else>
       <NuxtLink to="/login" class="mx-2">
@@ -36,7 +60,27 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
-import BaseButton from "@/components/parts/BaseButton.vue";
+import { useGameStore } from "@/stores/game";
+import BaseButton from "~/components/parts/BaseButton.vue";
 
+const gameStore = useGameStore();
 const auth = useAuthStore();
+
+const toTop = () => {
+  gameStore.setGameStatus("START");
+};
+
+const toRanking = () => {
+  gameStore.setGameStatus("RANKING");
+};
 </script>
+
+<style scoped lang="scss">
+.karuta-header {
+  font-weight: bold;
+  font-size: 18px;
+}
+.font-mono {
+  font-family: "Courier New", Courier, monospace;
+}
+</style>

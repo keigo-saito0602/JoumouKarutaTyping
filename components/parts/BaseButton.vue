@@ -1,4 +1,3 @@
-<!-- components/common/BaseButton.vue -->
 <template>
   <v-btn
     :color="color"
