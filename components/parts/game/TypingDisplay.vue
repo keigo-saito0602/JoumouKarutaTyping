@@ -17,12 +17,30 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  text: string;
-  yomi: string;
-  viewIndexKana: number;
-  inputChar: string;
-  userInput: string;
-  currentQuestionRome: string;
-}>();
+defineProps({
+  text: {
+    type: String,
+    required: true,
+  },
+  yomi: {
+    type: String,
+    default: "",
+  },
+  viewIndexKana: {
+    type: Number,
+    required: true,
+  },
+  inputChar: {
+    type: String,
+    required: true,
+  },
+  userInput: {
+    type: String,
+    required: true,
+  },
+  currentQuestionRome: {
+    type: String,
+    required: true,
+  },
+});
 </script>

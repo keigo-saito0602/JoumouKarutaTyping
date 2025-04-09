@@ -1,4 +1,4 @@
-import { SOUNDS } from "@/types/sound";
+import { SOUNDS } from "~/constants/sound";
 
 class SoundPlayer {
   private audio: HTMLAudioElement | null = null;

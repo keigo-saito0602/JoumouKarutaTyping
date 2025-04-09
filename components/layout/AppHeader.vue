@@ -2,6 +2,7 @@
   <v-app-bar app color="primary" dark>
     <v-toolbar-title>{{ $t("app.name") }}</v-toolbar-title>
     <v-spacer />
+    {{ gameStore.gameStatus }}
     <template v-if="auth.isLoggedIn">
       <NuxtLink to="/dashboard" class="mx-2">
         <BaseButton
@@ -11,9 +12,6 @@
         />
       </NuxtLink>
       <template v-if="gameStore.gameStatus === 'PLAYING'">
-        <div class="mr-4 text-primary text-h6 font-mono">
-          <i class="fa-solid fa-clock"></i> {{ gameStore.playTimeText }}
-        </div>
         <div class="text-h6 font-weight-medium">
           {{ gameStore.result }}枚 GET!
         </div>
@@ -76,11 +74,23 @@ const toRanking = () => {
 </script>
 
 <style scoped lang="scss">
+.v-app-bar {
+  height: 64px; /* Adjust the height of the header */
+  padding: 0;
+  position: sticky;
+  top: 0;
+}
+
 .karuta-header {
   font-weight: bold;
   font-size: 18px;
 }
+
 .font-mono {
   font-family: "Courier New", Courier, monospace;
+}
+
+.v-spacer {
+  margin-right: 0; /* Adjust spacer margin if necessary */
 }
 </style>

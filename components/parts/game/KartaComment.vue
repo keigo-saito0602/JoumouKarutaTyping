@@ -5,7 +5,12 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ comment: string }>();
+defineProps<{
+  comment: {
+    type: String;
+    default: "";
+  };
+}>();
 </script>
 
 <style scoped lang="scss">
