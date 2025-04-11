@@ -4,7 +4,14 @@ export default defineNuxtRouteMiddleware((to) => {
   const auth = useAuthStore();
   const token = useCookie("token");
 
-  const PUBLIC_PATHS = ["/", "/login", "/signup", "/ranking"];
+  const PUBLIC_PATHS = [
+    "/",
+    "/login",
+    "/signup",
+    "/ranking",
+    "/game",
+    "/game/karutaCollector",
+  ];
 
   if (PUBLIC_PATHS.includes(to.path)) return;
 
