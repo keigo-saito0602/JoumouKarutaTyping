@@ -1,96 +1,135 @@
 <template>
   <v-app-bar app color="primary" dark>
-    <v-toolbar-title>{{ $t("app.name") }}</v-toolbar-title>
+    <v-toolbar-title>
+      {{ $t("app.name") }}
+    </v-toolbar-title>
+
     <v-spacer />
-    {{ gameStore.gameStatus }}
+
+    <BaseButton
+      v-if="showHomeButton"
+      icon="mdi-home"
+      label="ホーム画面"
+      color="white"
+      variant="text"
+      class="mx-2"
+      @click="goToHome"
+    />
+
+    <BaseButton
+      v-if="showTopButton"
+      icon="mdi-home"
+      label="スタート画面"
+      color="white"
+      variant="text"
+      class="mx-2"
+      @click="toGameStart"
+    />
+
+    <BaseButton
+      v-if="showRankingButton"
+      icon="mdi-star"
+      label="ランキングを見る"
+      color="white"
+      variant="text"
+      class="mx-2"
+      @click="toRanking"
+    />
+
     <template v-if="auth.isLoggedIn">
-      <NuxtLink to="/dashboard" class="mx-2">
-        <BaseButton
-          :label="$t('header.dashboard')"
-          color="white"
-          variant="outlined"
-        />
-      </NuxtLink>
-      <template v-if="gameStore.gameStatus === 'PLAYING'">
-        <div class="text-h6 font-weight-medium">
-          {{ gameStore.result }}枚 GET!
-        </div>
-      </template>
-      <template
-        v-else-if="['RANKING', 'RESULT'].includes(gameStore.gameStatus)"
+      <v-chip
+        v-if="isPlaying"
+        color="white"
+        text-color="primary"
+        variant="flat"
+        class="mx-2"
       >
-        <BaseButton
-          icon="mdi-home"
-          label="スタート画面"
-          color="primary"
-          variant="outlined"
-          @click="toTop"
-        />
-      </template>
-      <template v-else-if="gameStore.gameStatus === 'START'">
-        <BaseButton
-          icon="mdi-star"
-          label="ランキングを見る"
-          color="primary"
-          variant="outlined"
-          @click="toRanking"
-        />
-      </template>
+        {{ result }}枚 GET!
+      </v-chip>
+
+      <BaseButton
+        :label="$t('header.dashboard')"
+        color="white"
+        variant="flat"
+        class="mx-2"
+        @click="goToDashboard"
+      />
     </template>
+
     <template v-else>
-      <NuxtLink to="/login" class="mx-2">
-        <BaseButton
-          :label="$t('header.login')"
-          color="white"
-          variant="outlined"
-        />
-      </NuxtLink>
-      <NuxtLink to="/signup" class="mx-2">
-        <BaseButton
-          :label="$t('header.signup')"
-          color="white"
-          variant="outlined"
-        />
-      </NuxtLink>
+      <BaseButton
+        label="ログイン"
+        color="white"
+        variant="outlined"
+        class="mx-2"
+        @click="goToLogin"
+      />
+      <BaseButton
+        label="新規登録"
+        color="white"
+        variant="outlined"
+        class="mx-2"
+        @click="goToSignup"
+      />
     </template>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
+import { computed, watch } from "vue";
 import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
+import { GAME_STATUS } from "@/constants/game";
 import BaseButton from "~/components/parts/BaseButton.vue";
 
-const gameStore = useGameStore();
 const auth = useAuthStore();
+const gameStore = useGameStore();
+const router = useRouter();
+const route = useRoute();
 
-const toTop = () => {
-  gameStore.setGameStatus("START");
+const result = computed(() => gameStore.result);
+const gameStatus = computed(() => gameStore.gameStatus);
+
+const isPlaying = computed(() => gameStatus.value === GAME_STATUS.PLAYING);
+const isStart = computed(() => gameStatus.value === GAME_STATUS.START);
+const isResult = computed(() => gameStatus.value === GAME_STATUS.RESULT);
+
+const showHomeButton = computed(
+  () => gameStatus.value === GAME_STATUS.START && route.path !== "/"
+);
+
+const showRankingButton = computed(
+  () => gameStatus.value === GAME_STATUS.START && route.path !== "/ranking"
+);
+const showTopButton = computed(() => isResult.value);
+
+const toGameStart = () => {
+  gameStore.setGameStatus(GAME_STATUS.START);
 };
 
 const toRanking = () => {
-  gameStore.setGameStatus("RANKING");
+  router.push("/ranking");
 };
+
+const goToHome = () => router.push("/");
+const goToDashboard = () => router.push("/dashboard");
+const goToLogin = () => router.push("/login");
+const goToSignup = () => router.push("/signup");
+
+watch(gameStatus, (newVal) => {
+  console.log("📌 gameStatus changed to:", newVal);
+});
 </script>
 
 <style scoped lang="scss">
 .v-app-bar {
-  height: 64px; /* Adjust the height of the header */
+  height: 64px;
   padding: 0;
   position: sticky;
   top: 0;
 }
 
-.karuta-header {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.font-mono {
-  font-family: "Courier New", Courier, monospace;
-}
-
 .v-spacer {
-  margin-right: 0; /* Adjust spacer margin if necessary */
+  margin-right: 0;
 }
 </style>

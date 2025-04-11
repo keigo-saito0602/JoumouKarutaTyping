@@ -28,4 +28,10 @@ defineProps<{
 .base-button {
   text-transform: none;
 }
+
+.base-button {
+  text-transform: none;
+  font-weight: bold;
+  margin: 0 4px;
+}
 </style>

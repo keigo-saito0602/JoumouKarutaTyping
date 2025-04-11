@@ -16,15 +16,16 @@
     @mouseleave="$emit('mouseleave')"
     @focus="$emit('focus')"
   >
-    <slot>{{ label }}</slot>
+    {{ label }}
   </v-btn>
 </template>
 
 <script setup lang="ts">
-defineOptions({ name: "BaseButton", inheritAttrs: false });
+defineOptions({ name: "KarutaButton", inheritAttrs: false });
 
 defineProps<{
   label?: string;
+  icon?: string;
   color?: string;
   variant?: "elevated" | "flat" | "tonal" | "outlined" | "text" | "plain";
   loading?: boolean;
@@ -32,7 +33,6 @@ defineProps<{
   type?: "button" | "submit" | "reset";
   block?: boolean;
   size?: "x-small" | "small" | "default" | "large" | "x-large";
-  icon?: string;
 }>();
 
 defineEmits<{
@@ -45,7 +45,7 @@ defineEmits<{
 </script>
 
 <style scoped lang="scss">
-.base-button {
+.karuta-button {
   text-transform: none;
   font-weight: bold;
   margin: 12px 24px;

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { GAME_STATUS } from "@/types/game";
-import type { GameStatus, GameScore, GameUser } from "@/types/game";
+import { GAME_STATUS } from "~/constants/game";
+import type { GameStatus, GameScore, GameUser } from "~/constants/game";
 
 interface GameState extends GameScore, GameUser {
   gameStatus: GameStatus;
@@ -39,7 +39,9 @@ export const useGameStore = defineStore("game", {
     },
 
     resetGame() {
-      this.userName = "";
+      if (!this.isLogin) {
+        this.userName = "";
+      }
       this.result = 0;
       this.subResult = 0;
       this.playTimeText = "";

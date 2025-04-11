@@ -1,21 +1,23 @@
 <template>
-  <v-text-field
-    class="base-text-field"
-    :model-value="modelValue"
-    @update:model-value="(v) => $emit('update:modelValue', v)"
-    @keyup.enter="$emit('enter')"
-    :label="label"
-    :type="type"
-    :rules="rules"
-    :prepend-icon="icon"
-    :autocomplete="autocomplete"
-    :variant="variant"
-    :density="density"
-    :bg-color="bgColor"
-    :disabled="disabled"
-    :placeholder="placeholder"
-    v-bind="$attrs"
-  />
+  <div class="base-text-field">
+    <v-text-field
+      :model-value="modelValue"
+      :label="label"
+      :type="type"
+      :counter="counter"
+      :rules="rules"
+      :prepend-icon="icon"
+      :autocomplete="autocomplete"
+      :variant="variant"
+      :density="density"
+      :bg-color="bgColor"
+      :disabled="disabled"
+      :placeholder="placeholder"
+      v-bind="$attrs"
+      @update:model-value="(v) => $emit('update:modelValue', v)"
+      @keyup.enter="$emit('enter')"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -25,6 +27,7 @@ defineProps<{
   modelValue: string;
   label?: string;
   type?: string;
+  counter?: string;
   rules?: ((v: string) => true | string)[];
   icon?: string;
   autocomplete?: string;
@@ -42,13 +45,10 @@ defineEmits<{
 </script>
 
 <style scoped lang="scss">
-.base-text-field :deep(.v-input) {
-  height: 80px;
-}
-.base-text-field :deep(.v-input__control) {
+.base-text-field :deep(.v-field__input) {
   font-size: 1.5rem;
-}
-.base-text-field :deep(.v-input__field) {
-  padding: 16px;
+  font-weight: 500;
+  line-height: 2rem;
+  padding: 30px 16px 10px 16px;
 }
 </style>

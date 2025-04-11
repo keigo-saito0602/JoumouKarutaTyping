@@ -19,6 +19,7 @@
       <KartaComment :comment="state.currentQuestion.comment" />
     </template>
   </div>
+  <SoundPlayer ref="soundRef" />
 </template>
 
 <script setup lang="ts">
@@ -27,10 +28,10 @@ import TypingDisplay from "@/components/parts/game/TypingDisplay.vue";
 import ResultController from "~/components/parts/game/ResultController.vue";
 import KartaComment from "@/components/parts/game/KartaComment.vue";
 import CircularTimer from "@/components/parts/CircularTimer.vue";
+import SoundPlayer from "@/components/parts/SoundPlayer.vue";
 import TIMER_OPTIONS from "@/constants/constants";
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import { CHAR_TABLE } from "~/constants/TypingData";
-import { soundPlayer } from "@/utils/soundPlayer";
 import { getCards } from "@/services/api";
 import { checkSmallHira, checkAfterN } from "@/utils/kanaUtils";
 import { shuffleList } from "@/utils/gameUtils";
@@ -74,6 +75,24 @@ const toResult = () => {
   gameStore.setGameStatus("RESULT");
 };
 
+const soundRef = ref<InstanceType<typeof SoundPlayer> | null>(null);
+
+const playEndSound = () => {
+  soundRef.value?.play("WHISTLE");
+};
+
+const playKeyStroke = () => {
+  soundRef.value?.play("KEY_STROKE");
+};
+
+const playGetCard = () => {
+  soundRef.value?.play("GET_CARD");
+};
+
+const playFailed = () => {
+  soundRef.value?.play("FAILED");
+};
+
 const toStart = () => {
   if (state.timerId) clearTimeout(state.timerId);
   gameStore.resetGame();
@@ -81,19 +100,15 @@ const toStart = () => {
 };
 
 const onTimeUp = () => {
-  playEndSound;
+  playEndSound();
   clearTimeout(state.timerId);
   gameStore.setPlayTimeText("");
   state.isClear = true;
 };
 
-const playEndSound = () => {
-  soundPlayer.play("WHISTLE");
-};
-
 const handleKeydown = (e: KeyboardEvent) => {
   e.preventDefault();
-  soundPlayer.play("KEY_STROKE");
+  playKeyStroke();
 
   const judged = judgeInputChar(e.key);
   if (judged === 0) {
@@ -105,7 +120,7 @@ const setFirstQuestion = async () => {
   const r = await getCards();
   state.cardList = r;
   state.randomCardList = shuffleList(state.cardList);
-  soundPlayer.play("GET_CARD");
+  playGetCard();
   setQuestion();
 };
 
@@ -154,7 +169,7 @@ const judgeInputChar = (chr: string): number | boolean => {
     }
   }
 
-  soundPlayer.play("FAILED");
+  playFailed();
   gameStore.setSubResult(gameStore.subResult + 1);
   state.userInput = "";
   return false;
@@ -237,7 +252,7 @@ const handleIncorrectInput = (neededChars: string[]): boolean => {
     value.startsWith(state.userInput)
   );
   if (!isMatch) {
-    soundPlayer.play("FAILED");
+    playFailed();
     gameStore.setSubResult(gameStore.subResult + 1);
     state.userInput = "";
     return false;
@@ -246,7 +261,7 @@ const handleIncorrectInput = (neededChars: string[]): boolean => {
 };
 
 const success = () => {
-  soundPlayer.play("GET_CARD");
+  playGetCard();
   gameStore.setResult(gameStore.result + 1);
   state.viewIndex = 0;
   state.viewIndexKana = 0;

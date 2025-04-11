@@ -22,7 +22,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
 import BaseButton from "@/components/parts/BaseButton.vue";
 
-import KarutaCollectorApp from "~/components/project/KarutaCollector.vue";
+import KarutaCollectorApp from "~/components/gameModes/typing/KarutaTyping.vue";
 
 const auth = useAuthStore();
 const gameStore = useGameStore();

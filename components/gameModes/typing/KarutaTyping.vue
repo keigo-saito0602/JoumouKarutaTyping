@@ -17,9 +17,6 @@
       <template v-else-if="gameStore.gameStatus === 'RESULT'">
         <KarutaCollectorResult />
       </template>
-      <template v-else-if="gameStore.gameStatus === 'RANKING'">
-        <KarutaCollectorRanking />
-      </template>
     </main>
   </v-container>
 </template>
@@ -29,11 +26,9 @@ import { onMounted } from "vue";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useGameStore } from "@/stores/game";
 
-import KarutaHeader from "@/components/layout/AppHeader.vue";
-import KarutaCollectorStart from "@/components/project/KarutaCollector/KarutaCollectorStart.vue";
-import KarutaCollectorGame from "@/components/project/KarutaCollector/KarutaCollectorGame.vue";
-import KarutaCollectorResult from "@/components/project/KarutaCollector/KarutaCollectorResult.vue";
-import KarutaCollectorRanking from "@/components/project/KarutaCollector/KarutaCollectorRanking.vue";
+import KarutaCollectorStart from "~/components/gameModes/typing/KarutaTypingGameStart.vue";
+import KarutaCollectorGame from "~/components/gameModes/typing/KarutaTypingGame.vue";
+import KarutaCollectorResult from "~/components/gameModes/typing/KarutaTypingGameResult.vue";
 
 const gameStore = useGameStore();
 

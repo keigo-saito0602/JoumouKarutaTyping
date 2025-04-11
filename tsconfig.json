@@ -4,6 +4,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "types": ["node", "@nuxtjs/i18n"],
+    "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"]
