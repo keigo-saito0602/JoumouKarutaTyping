@@ -59,7 +59,7 @@ const handleLogin = async () => {
   try {
     const res = await login({ email: email.value, password: password.value });
     auth.setUser(res.user, res.token);
-    navigateTo("/dashboard");
+    navigateTo("/game");
   } catch (e: any) {
     error.value = e.message || "ログインに失敗しました";
   } finally {
@@ -76,6 +76,6 @@ const handleGuestLogin = () => {
     },
     "guest-token"
   );
-  navigateTo("/dashboard");
+  navigateTo("/game");
 };
 </script>

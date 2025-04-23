@@ -10,7 +10,6 @@
     <BaseTextField
       v-model="email"
       :label="$t('form.email')"
-      type="email"
       icon="mdi-email"
       :rules="[rules.required, rules.email]"
       autocomplete="email"
@@ -18,12 +17,11 @@
     <BaseTextField
       v-model="password"
       :label="$t('form.password')"
-      type="password"
       icon="mdi-lock"
       :rules="[rules.required, rules.minLength(6)]"
       autocomplete="new-password"
     />
-    <BaseSubmitButton
+    <BaseButton
       :label="$t('common.signup')"
       :color="'primary'"
       :loading="loading"
@@ -37,7 +35,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
-import BaseSubmitButton from "~/components/parts/BaseButton.vue";
+import BaseButton from "@/components/parts/BaseButton.vue";
 import { useI18n } from "vue-i18n";
 import { createValidationRules } from "~/utils/validationRules";
 import { useAuthStore } from "~/stores/auth";

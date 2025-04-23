@@ -4,9 +4,16 @@ export default defineNuxtRouteMiddleware((to) => {
   const auth = useAuthStore();
   const token = useCookie("token");
 
-  const publicPaths = ["/", "/login", "/signup"];
+  const PUBLIC_PATHS = [
+    "/",
+    "/login",
+    "/signup",
+    "/ranking",
+    "/game",
+    "/game/karutaCollector",
+  ];
 
-  if (publicPaths.includes(to.path)) return;
+  if (PUBLIC_PATHS.includes(to.path)) return;
 
   if (!auth.isLoggedIn && !token.value) {
     return navigateTo("/login");

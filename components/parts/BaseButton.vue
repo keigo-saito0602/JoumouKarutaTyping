@@ -1,4 +1,3 @@
-<!-- components/common/BaseButton.vue -->
 <template>
   <v-btn
     :color="color"
@@ -28,5 +27,11 @@ defineProps<{
 <style scoped lang="scss">
 .base-button {
   text-transform: none;
+}
+
+.base-button {
+  text-transform: none;
+  font-weight: bold;
+  margin: 0 4px;
 }
 </style>

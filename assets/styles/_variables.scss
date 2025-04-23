@@ -1,13 +1,20 @@
-// 色の定義
-$color-primary: #1976d2;
-$color-secondary: #424242;
-$color-accent: #82b1ff;
-$color-error: #ff5252;
-
 // 文字サイズ
 $font-size-base: 16px;
 $font-size-title: 24px;
+$font-large: 1.5rem;
+$font-medium: 1.2rem;
+$font-small: 0.9rem;
 
-// z-index
+// レイアウト
+$header-height: 64px;
+$footer-height: 40px;
+$content-max-width: 960px;
+
 $z-modal: 1000;
 $z-header: 100;
+
+// 間隔
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
