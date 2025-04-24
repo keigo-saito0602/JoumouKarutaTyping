@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { signup } from "~/utils/authApi";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
 import BaseButton from "@/components/parts/BaseButton.vue";
 import { useI18n } from "vue-i18n";
@@ -59,10 +60,12 @@ const handleSignup = async () => {
   error.value = "";
 
   try {
-    const res = {
-      user: { id: "456", name: name.value, email: email.value },
-      token: "mock-signup-token",
-    };
+    const res = await signup({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    });
+
     auth.setUser(res.user, res.token);
     navigateTo("/dashboard");
   } catch (e: any) {

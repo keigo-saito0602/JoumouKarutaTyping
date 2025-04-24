@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { collection, onSnapshot } from "firebase/firestore";
-import { getResults } from "@/services/api";
+import { getResults } from "@/services/firebaseService";
 import { useFirestore } from "@/composables/useFirestore";
 import { RANKING_PAGE_SIZE } from "@/types/ranking";
 import RankingTable from "@/components/parts/RankingTable.vue";
