@@ -1,4 +1,4 @@
-<template>
+<template v-if="ready">
   <v-app-bar app color="primary" dark>
     <v-toolbar-title>
       {{ $t("app.name") }}
@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
 import { computed, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
 import { GAME_STATUS } from "@/constants/game";
@@ -86,9 +87,15 @@ const auth = useAuthStore();
 const gameStore = useGameStore();
 const router = useRouter();
 const route = useRoute();
+const { isLoggedIn, ready } = storeToRefs(auth);
 
 const result = computed(() => gameStore.result);
 const gameStatus = computed(() => gameStore.gameStatus);
+
+const goToHome = () => router.push("/");
+const goToDashboard = () => router.push("/dashboard");
+const goToLogin = () => router.push("/login");
+const goToSignup = () => router.push("/signup");
 
 const isPlaying = computed(() => gameStatus.value === GAME_STATUS.PLAYING);
 const isStart = computed(() => gameStatus.value === GAME_STATUS.START);
@@ -111,13 +118,8 @@ const toRanking = () => {
   router.push("/ranking");
 };
 
-const goToHome = () => router.push("/");
-const goToDashboard = () => router.push("/dashboard");
-const goToLogin = () => router.push("/login");
-const goToSignup = () => router.push("/signup");
-
-watch(gameStatus, (newVal) => {
-  console.log("📌 gameStatus changed to:", newVal);
+onMounted(() => {
+  const auth = useAuthStore();
 });
 </script>
 

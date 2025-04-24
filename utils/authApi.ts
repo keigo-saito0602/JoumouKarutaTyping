@@ -1,10 +1,9 @@
-// utils/authApi.ts
-interface LoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface AuthResponse {
+export interface AuthResponse {
   user: {
     id: string;
     name: string;
@@ -14,44 +13,37 @@ interface AuthResponse {
 }
 
 export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
-  // 模擬的なサーバー応答（実際はここを $fetch などに変更）
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (
-        payload.email === "test@example.com" &&
-        payload.password === "password"
-      ) {
-        resolve({
-          user: {
-            id: "123",
-            name: "テストユーザー",
-            email: payload.email,
-          },
-          token: "mock-jwt-token",
-        });
-      } else {
-        reject(new Error("メールアドレスまたはパスワードが正しくありません"));
-      }
-    }, 500);
-  });
+  try {
+    const config = useRuntimeConfig();
+
+    const res = await $fetch<AuthResponse>(`${config.public.apiBase}/login`, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return res;
+  } catch (error: any) {
+    throw new Error(error?.data?.message || "ログインに失敗しました");
+  }
 };
 
-// **
-// * Go バックエンドと連携する本番用のログイン処理
-// */
-// export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
-//   try {
-//     const res = await $fetch<AuthResponse>('/api/login', {
-//       method: 'POST',
-//       body: payload,
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
+export const signup = async (payload: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<AuthResponse> => {
+  const config = useRuntimeConfig();
 
-//     return res;
-//   } catch (error: any) {
-//
-//     throw new Error(error?.data?.message || 'ログインに失敗しました');
-//   }
-// };
+  const res = await $fetch<AuthResponse>(`${config.public.apiBase}/users`, {
+    method: "POST",
+    body: payload,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res;
+};

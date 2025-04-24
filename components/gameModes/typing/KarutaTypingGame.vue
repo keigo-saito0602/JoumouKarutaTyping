@@ -32,7 +32,7 @@ import SoundPlayer from "@/components/parts/SoundPlayer.vue";
 import TIMER_OPTIONS from "@/constants/constants";
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import { CHAR_TABLE } from "~/constants/TypingData";
-import { getCards } from "@/services/api";
+import { getCards } from "@/services/firebaseService";
 import { checkSmallHira, checkAfterN } from "@/utils/kanaUtils";
 import { shuffleList } from "@/utils/gameUtils";
 import { useGameStore } from "@/stores/game";

@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useGameStore } from "@/stores/game";
-import { addResult, getRank, setFeeling } from "@/services/api";
+import { addResult, getRank, setFeeling } from "@/services/firebaseService";
 import KarutaButton from "@/components/parts/KarutaButton.vue";
 import KarutaTextField from "@/components/parts/KarutaTextField.vue";
 import ConfettiOverlay from "@/components/parts/ConfettiOverlay.vue";
