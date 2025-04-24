@@ -1,30 +1,33 @@
 <template>
   <v-text-field
     :model-value="modelValue"
-    @update:model-value="(value) => $emit('update:modelValue', value)"
+    @update:model-value="$emit('update:modelValue', $event)"
     :label="label"
     :type="type"
-    :rules="rules"
-    :prepend-icon="icon"
-    :autocomplete="autocomplete"
+    :variant="variant"
+    :density="density"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :class="className"
+    v-bind="$attrs"
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+defineOptions({ name: "KarutaTextField", inheritAttrs: false });
 
-export default defineComponent({
-  props: {
-    modelValue: { type: String, required: true },
-    label: { type: String, required: true },
-    type: { type: String, default: "text" },
-    rules: {
-      type: Array as () => ((v: string) => true | string)[],
-      default: () => [],
-    },
-    icon: { type: String, default: "" },
-    autocomplete: { type: String, default: "" },
-  },
-  emits: ["update:modelValue"],
-});
+defineProps<{
+  modelValue: string;
+  label?: string;
+  type?: string;
+  variant?: "outlined" | "filled" | "solo" | "plain" | "underlined";
+  density?: "default" | "comfortable" | "compact";
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string; // class の代わりに
+}>();
+
+defineEmits<{
+  (e: "update:modelValue", value: string): void;
+}>();
 </script>

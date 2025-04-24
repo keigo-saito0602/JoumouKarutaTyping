@@ -93,7 +93,7 @@ yarn build
 この構造は以下のコマンドで出力しました：
 
 ```bash
-tree -L 3 -I "node_modules|.git|dist" > structure.txt
+tree -L 3 -I "node_modules|.git|dist|cards"
 ```
 
 - `-L 3`: 3階層まで表示

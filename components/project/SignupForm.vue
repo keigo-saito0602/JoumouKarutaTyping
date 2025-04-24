@@ -10,7 +10,6 @@
     <BaseTextField
       v-model="email"
       :label="$t('form.email')"
-      type="email"
       icon="mdi-email"
       :rules="[rules.required, rules.email]"
       autocomplete="email"
@@ -18,12 +17,11 @@
     <BaseTextField
       v-model="password"
       :label="$t('form.password')"
-      type="password"
       icon="mdi-lock"
       :rules="[rules.required, rules.minLength(6)]"
       autocomplete="new-password"
     />
-    <BaseSubmitButton
+    <BaseButton
       :label="$t('common.signup')"
       :color="'primary'"
       :loading="loading"
@@ -36,8 +34,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { signup } from "~/utils/authApi";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
-import BaseSubmitButton from "~/components/parts/BaseButton.vue";
+import BaseButton from "@/components/parts/BaseButton.vue";
 import { useI18n } from "vue-i18n";
 import { createValidationRules } from "~/utils/validationRules";
 import { useAuthStore } from "~/stores/auth";
@@ -61,10 +60,12 @@ const handleSignup = async () => {
   error.value = "";
 
   try {
-    const res = {
-      user: { id: "456", name: name.value, email: email.value },
-      token: "mock-signup-token",
-    };
+    const res = await signup({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    });
+
     auth.setUser(res.user, res.token);
     navigateTo("/dashboard");
   } catch (e: any) {

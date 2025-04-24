@@ -1,28 +1,27 @@
 import { useAuthStore } from "~/stores/auth";
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuthStore();
-  const token = useCookie("token");
+  const token = useCookie("token").value;
 
-  const publicPaths = ["/", "/login", "/signup"];
+  const PUBLIC_PATHS = [
+    "/",
+    "/login",
+    "/signup",
+    "/ranking",
+    "/game",
+    "/game/karutaCollector",
+  ];
 
-  if (publicPaths.includes(to.path)) return;
-
-  if (!auth.isLoggedIn && !token.value) {
-    return navigateTo("/login");
+  if (!auth.isLoggedIn && token) {
+    try {
+      await auth.restoreSession();
+    } catch {
+      auth.clearUser();
+    }
   }
 
-  // Cookieがあればストアに復元（※ここは本来APIで検証する）
-  if (!auth.isLoggedIn && token.value) {
-    // TODO: 本来はここで token 検証＋ユーザー取得API呼び出しする
-    // ここでは仮ユーザーを直接復元する（デモ用）
-    auth.setUser(
-      {
-        id: "123",
-        name: "仮ユーザー",
-        email: "test@example.com",
-      },
-      token.value
-    );
+  if (!auth.isLoggedIn && !PUBLIC_PATHS.includes(to.path)) {
+    return navigateTo("/login");
   }
 });
