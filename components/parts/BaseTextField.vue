@@ -24,7 +24,7 @@ defineProps<{
   density?: "default" | "comfortable" | "compact";
   placeholder?: string;
   disabled?: boolean;
-  className?: string; // class の代わりに
+  className?: string;
 }>();
 
 defineEmits<{
