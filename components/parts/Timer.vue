@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 const timeText = ref("00:00:00");
 const timerId = ref<NodeJS.Timeout | number | null>(null);
-const endTime = ref(0); // ← ここを future に変える！
+const endTime = ref(0);
 
 const updateTime = () => {
   const now = Date.now();

@@ -50,7 +50,6 @@ const resolveComponent = (mode: string) => {
 
 const currentGameComponent = computed(() => resolveComponent(modeId));
 
-// ✅ ページ読み込み時に START 状態へセット！
 onMounted(() => {
   gameStore.setGameStatus("START");
 });
