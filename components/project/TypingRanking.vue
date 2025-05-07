@@ -1,5 +1,9 @@
 <template>
+  <div v-if="ranking.length === 0">
+    <p>ランキングを読み込み中...</p>
+  </div>
   <RankingTable
+    v-else
     :ranking="ranking"
     :page-size="pageSize"
     :current-page="currentPage"
@@ -9,50 +13,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { collection, onSnapshot } from "firebase/firestore";
-import { getResults } from "@/services/firebaseService";
-import { useFirestore } from "@/composables/useFirestore";
+import { ref, onMounted } from "vue";
 import { RANKING_PAGE_SIZE } from "@/types/ranking";
 import RankingTable from "@/components/parts/RankingTable.vue";
-import type { SortedResult } from "@/types/ranking";
+import type { EventScore } from "@/services/rankingService";
+import { getEventScores } from "@/services/rankingService";
 
-const db = useFirestore();
-let unsubscribe: (() => void) | null = null;
-
-const ranking = ref<SortedResult[]>([]);
+const ranking = ref<EventScore[]>([]);
 const currentPage = ref(1);
 const pageSize = RANKING_PAGE_SIZE;
-const totalData = computed(() => ranking.value.length);
-
-const isFirstPage = computed(() => currentPage.value === 1);
-const isLastPage = computed(
-  () => currentPage.value >= Math.ceil(totalData.value / pageSize)
-);
 
 const nextPage = () => {
-  if (!isLastPage.value) currentPage.value++;
+  const totalPages = Math.ceil(ranking.value.length / pageSize);
+  if (currentPage.value < totalPages) currentPage.value++;
 };
 
 const prevPage = () => {
-  if (!isFirstPage.value) currentPage.value--;
+  if (currentPage.value > 1) currentPage.value--;
 };
 
-const getRealtimeResults = async () => {
-  unsubscribe = onSnapshot(
-    collection(db, "event_results"),
-    async () => {
-      const results = await getResults();
-      ranking.value = results;
-    },
-    (error) => {
-      console.error("Error fetching results:", error);
-    }
-  );
+const fetchRanking = async () => {
+  try {
+    const results = await getEventScores();
+    ranking.value = results;
+  } catch (error) {
+    console.error("ランキングデータ取得に失敗:", error);
+  }
 };
 
-onMounted(getRealtimeResults);
-onBeforeUnmount(() => {
-  if (unsubscribe) unsubscribe();
-});
+onMounted(fetchRanking);
 </script>

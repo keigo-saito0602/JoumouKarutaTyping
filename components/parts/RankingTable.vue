@@ -5,20 +5,21 @@
         <tr>
           <th><v-icon start>mdi-crown</v-icon>順位</th>
           <th><v-icon start>mdi-account</v-icon>ニックネーム</th>
+          <th><v-icon start>mdi-check</v-icon>スコア</th>
           <th><v-icon start>mdi-check</v-icon>札の数</th>
           <th><v-icon start>mdi-close</v-icon>お手つき</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(data, index) in currentPageData" :key="index">
+        <tr v-for="(data, index) in currentPageData" :key="data.id">
           <td>{{ getRank(index) }}<span class="ranking-small">位</span></td>
           <td>{{ data.name }}<span class="ranking-small">さん</span></td>
-          <td>{{ data.result }}<span class="ranking-small">枚</span></td>
-          <td>{{ data.sub_result }}<span class="ranking-small">回</span></td>
+          <td>{{ data.score }}<span class="ranking-small">点</span></td>
+          <td>{{ data.cards_taken }}<span class="ranking-small">枚</span></td>
+          <td>{{ data.fault_count }}<span class="ranking-small">回</span></td>
         </tr>
-
         <tr v-for="i in emptyRowCount" :key="'empty-' + i">
-          <td colspan="4">&nbsp;</td>
+          <td colspan="5">&nbsp;</td>
         </tr>
       </tbody>
     </v-table>
@@ -36,10 +37,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { SortedResult } from "@/types/ranking";
+import type { EventScore } from "@/services/rankingService";
 
 const props = defineProps<{
-  ranking: SortedResult[];
+  ranking: EventScore[];
   pageSize: number;
   currentPage: number;
 }>();
