@@ -16,7 +16,7 @@
         :userInput="state.userInput"
         :currentQuestionRome="state.currentQuestionRome"
       />
-      <KartaComment :comment="state.currentQuestion.comment" />
+      <KartaComment :comment="state.currentQuestion.comment || ''" />
     </template>
   </div>
   <SoundPlayer ref="soundRef" />
@@ -32,19 +32,19 @@ import SoundPlayer from "@/components/parts/SoundPlayer.vue";
 import TIMER_OPTIONS from "@/constants/constants";
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import { CHAR_TABLE } from "~/constants/TypingData";
-import { getCards } from "@/services/firebaseService";
+import { fetchShuffledCards, createEmptyCard } from "@/services/cardService";
+import type { Card } from "@/services/cardService";
 import { checkSmallHira, checkAfterN } from "@/utils/kanaUtils";
-import { shuffleList } from "@/utils/gameUtils";
 import { useGameStore } from "@/stores/game";
 
 const gameStore = useGameStore();
-const remainingTime = TIMER_OPTIONS.TEN_SECONDS;
+const remainingTime = TIMER_OPTIONS.TWO_MINUTES;
 
 const state = reactive({
-  cardList: [] as any[],
-  randomCardList: [] as any[],
+  cardList: [] as Card[],
+  randomCardList: [] as Card[],
   listIndex: 0,
-  currentQuestion: {} as any,
+  currentQuestion: createEmptyCard(),
   currentQuestionIndex: 0,
   currentQuestionRome: "",
   inputChar: "",
@@ -58,7 +58,7 @@ const state = reactive({
   offset: 0,
   startTime: 0,
   limitTime: 0,
-  timerId: null as any,
+  timerId: null as ReturnType<typeof setTimeout> | null,
 });
 
 onMounted(() => {
@@ -101,7 +101,10 @@ const toStart = () => {
 
 const onTimeUp = () => {
   playEndSound();
-  clearTimeout(state.timerId);
+  if (state.timerId !== null) {
+    clearTimeout(state.timerId);
+    state.timerId = null;
+  }
   gameStore.setPlayTimeText("");
   state.isClear = true;
 };
@@ -117,11 +120,15 @@ const handleKeydown = (e: KeyboardEvent) => {
 };
 
 const setFirstQuestion = async () => {
-  const r = await getCards();
-  state.cardList = r;
-  state.randomCardList = shuffleList(state.cardList);
-  playGetCard();
-  setQuestion();
+  try {
+    const cards = await fetchShuffledCards();
+    state.cardList = cards;
+    state.randomCardList = cards;
+    playGetCard();
+    setQuestion();
+  } catch (error) {
+    console.error("Failed to fetch cards:", error);
+  }
 };
 
 const setQuestion = () => {
@@ -279,7 +286,7 @@ const updateScopeArray = () => {
   Array.from(yomi).forEach((char, i) => {
     let hira = char as string;
 
-    // マージが2の時はスキップ
+    // マージンが2の時はスキップ
     if (margin === 2) {
       margin = 1;
       return;

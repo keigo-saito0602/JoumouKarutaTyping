@@ -6,10 +6,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  comment: {
-    type: String;
-    default: "";
-  };
+  comment: string;
 }>();
 </script>
 
