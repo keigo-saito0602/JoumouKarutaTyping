@@ -78,12 +78,12 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
 // import { storeToRefs } from "pinia";
-import { useAuthStore } from "~/stores/auth";
+// import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
 import { GAME_STATUS } from "@/constants/game";
 import BaseButton from "~/components/parts/BaseButton.vue";
 
-const auth = useAuthStore();
+// const auth = useAuthStore();
 const gameStore = useGameStore();
 const router = useRouter();
 const route = useRoute();

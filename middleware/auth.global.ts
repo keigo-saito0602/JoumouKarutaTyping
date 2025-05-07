@@ -1,3 +1,18 @@
+import { useAuthStore } from "~/stores/auth";
+
+export default defineNuxtRouteMiddleware(async (to) => {
+  const auth = useAuthStore();
+  const token = useCookie("token").value;
+
+  if (!auth.isLoggedIn && token) {
+    try {
+      await auth.restoreSession();
+    } catch {
+      auth.clearUser();
+    }
+  }
+});
+
 // import { useAuthStore } from "~/stores/auth";
 
 // export default defineNuxtRouteMiddleware(async (to) => {
@@ -26,31 +41,31 @@
 //   }
 // });
 
-import { useAuthStore } from "~/stores/auth";
+// import { useAuthStore } from "~/stores/auth";
 
-export default defineNuxtRouteMiddleware(async (to) => {
-  const DISABLE_LOGIN = true;
+// export default defineNuxtRouteMiddleware(async (to) => {
+//   const DISABLE_LOGIN = true;
 
-  if (DISABLE_LOGIN && ["/login", "/signup", "/dashboard"].includes(to.path)) {
-    return navigateTo("/");
-  }
+//   if (DISABLE_LOGIN && ["/login", "/signup", "/dashboard"].includes(to.path)) {
+//     return navigateTo("/");
+//   }
 
-  const auth = useAuthStore();
-  const token = useCookie("token").value;
+//   // const auth = useAuthStore();
+//   const token = useCookie("token").value;
 
-  const PUBLIC_PATHS = ["/", "/ranking", "/game", "/game/karutaCollector"];
+//   const PUBLIC_PATHS = ["/", "/ranking", "/game", "/game/karutaCollector"];
 
-  if (!DISABLE_LOGIN) {
-    if (!auth.isLoggedIn && token) {
-      try {
-        await auth.restoreSession();
-      } catch {
-        auth.clearUser();
-      }
-    }
+//   if (!DISABLE_LOGIN) {
+//     if (!auth.isLoggedIn && token) {
+//       try {
+//         await auth.restoreSession();
+//       } catch {
+//         auth.clearUser();
+//       }
+//     }
 
-    if (!auth.isLoggedIn && !PUBLIC_PATHS.includes(to.path)) {
-      return navigateTo("/login");
-    }
-  }
-});
+//     if (!auth.isLoggedIn && !PUBLIC_PATHS.includes(to.path)) {
+//       return navigateTo("/login");
+//     }
+//   }
+// });
