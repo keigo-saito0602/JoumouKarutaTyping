@@ -9,7 +9,11 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  plugins: ["~/plugins/vuetify"],
+  plugins: [
+    "~/plugins/vuetify",
+    "plugins/piniaPersist.client",
+    "plugins/init-auth.client",
+  ],
   runtimeConfig: {
     public: {
       apiBase: process.env.API_BASE_URL || "http://localhost:8080",

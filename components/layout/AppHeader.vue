@@ -36,27 +36,27 @@
       @click="toRanking"
     />
 
-    <!-- <template v-if="auth.isLoggedIn"> -->
-    <v-chip
-      v-if="isPlaying"
-      color="white"
-      text-color="primary"
-      variant="flat"
-      class="mx-2"
-    >
-      {{ result }}枚 GET!
-    </v-chip>
+    <template v-if="auth.isLoggedIn">
+      <v-chip
+        v-if="isPlaying"
+        color="white"
+        text-color="primary"
+        variant="flat"
+        class="mx-2"
+      >
+        {{ result }}枚 GET!
+      </v-chip>
 
-    <!-- <BaseButton
-      :label="$t('header.dashboard')"
-      color="white"
-      variant="flat"
-      class="mx-2"
-      @click="goToDashboard"
-    /> -->
-    <!-- </template> -->
+      <BaseButton
+        :label="$t('header.dashboard')"
+        color="white"
+        variant="flat"
+        class="mx-2"
+        @click="goToDashboard"
+      />
+    </template>
 
-    <!-- <template v-else>
+    <template v-else>
       <BaseButton
         label="ログイン"
         color="white"
@@ -71,34 +71,34 @@
         class="mx-2"
         @click="goToSignup"
       />
-    </template> -->
+    </template>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from "vue";
-// import { storeToRefs } from "pinia";
-// import { useAuthStore } from "~/stores/auth";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
 import { GAME_STATUS } from "@/constants/game";
 import BaseButton from "~/components/parts/BaseButton.vue";
 
-// const auth = useAuthStore();
+const auth = useAuthStore();
 const gameStore = useGameStore();
 const router = useRouter();
 const route = useRoute();
-// const { isLoggedIn, ready } = storeToRefs(auth);
+const { isLoggedIn, ready } = storeToRefs(auth);
 
 const result = computed(() => gameStore.result);
 const gameStatus = computed(() => gameStore.gameStatus);
 
 const goToHome = () => router.push("/");
-// const goToDashboard = () => router.push("/dashboard");
-// const goToLogin = () => router.push("/login");
-// const goToSignup = () => router.push("/signup");
+const goToDashboard = () => router.push("/dashboard");
+const goToLogin = () => router.push("/login");
+const goToSignup = () => router.push("/signup");
 
 const isPlaying = computed(() => gameStatus.value === GAME_STATUS.PLAYING);
-// const isStart = computed(() => gameStatus.value === GAME_STATUS.START);
+const isStart = computed(() => gameStatus.value === GAME_STATUS.START);
 const isResult = computed(() => gameStatus.value === GAME_STATUS.RESULT);
 
 const showHomeButton = computed(
@@ -118,9 +118,9 @@ const toRanking = () => {
   router.push("/ranking");
 };
 
-// onMounted(() => {
-//   const auth = useAuthStore();
-// });
+onMounted(() => {
+  const auth = useAuthStore();
+});
 </script>
 
 <style scoped lang="scss">
