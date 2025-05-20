@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { signup } from "~/utils/authApi";
+import { signup, login } from "~/utils/authApi";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
 import BaseButton from "@/components/parts/BaseButton.vue";
 import { useI18n } from "vue-i18n";
@@ -50,6 +50,7 @@ const password = ref("");
 const error = ref("");
 const loading = ref(false);
 const formRef = ref();
+
 const auth = useAuthStore();
 
 const handleSignup = async () => {
@@ -60,14 +61,20 @@ const handleSignup = async () => {
   error.value = "";
 
   try {
-    const res = await signup({
+    await signup({
       name: name.value,
       email: email.value,
       password: password.value,
     });
 
-    auth.setUser(res.user, res.token);
-    navigateTo("/dashboard");
+    const res = await login({
+      email: email.value,
+      password: password.value,
+    });
+
+    await auth.setUser(res.user, res.token);
+
+    window.location.href = "/game";
   } catch (e: any) {
     error.value = e.message || "登録に失敗しました";
   } finally {

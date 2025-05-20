@@ -25,13 +25,6 @@
     />
     <v-alert v-if="error" type="error" class="mt-4">{{ error }}</v-alert>
   </v-form>
-  <BaseSubmitButton
-    :label="$t('common.guest_login')"
-    :color="'secondary'"
-    :loading="loading"
-    :block="true"
-    @click="handleGuestLogin"
-  />
 </template>
 
 <script setup lang="ts">
@@ -45,6 +38,7 @@ import { createValidationRules } from "~/utils/validationRules";
 
 const { email, password, error, loading, formRef } = useLoginForm();
 const auth = useAuthStore();
+const { user } = storeToRefs(auth);
 
 const { t } = useI18n();
 const rules = createValidationRules(t);
@@ -59,23 +53,11 @@ const handleLogin = async () => {
   try {
     const res = await login({ email: email.value, password: password.value });
     auth.setUser(res.user, res.token);
-    navigateTo("/game");
+    window.location.href = "/game";
   } catch (e: any) {
     error.value = e.message || "ログインに失敗しました";
   } finally {
     loading.value = false;
   }
-};
-
-const handleGuestLogin = () => {
-  auth.setUser(
-    {
-      id: "guest",
-      name: "ゲストユーザー",
-      email: "guest@example.com",
-    },
-    "guest-token"
-  );
-  navigateTo("/game");
 };
 </script>
