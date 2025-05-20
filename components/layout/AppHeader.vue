@@ -1,4 +1,4 @@
-<template v-if="ready">
+<template>
   <v-app-bar app color="primary" dark>
     <v-toolbar-title>
       {{ $t("app.name") }}
@@ -36,42 +36,44 @@
       @click="toRanking"
     />
 
-    <template v-if="auth.isLoggedIn">
-      <v-chip
-        v-if="isPlaying"
-        color="white"
-        text-color="primary"
-        variant="flat"
-        class="mx-2"
-      >
-        {{ result }}枚 GET!
-      </v-chip>
+    <client-only>
+      <template v-if="auth.user">
+        <v-chip
+          v-if="isPlaying"
+          color="white"
+          text-color="primary"
+          variant="flat"
+          class="mx-2"
+        >
+          {{ result }}枚 GET!
+        </v-chip>
 
-      <BaseButton
-        :label="$t('header.dashboard')"
-        color="white"
-        variant="flat"
-        class="mx-2"
-        @click="goToDashboard"
-      />
-    </template>
+        <BaseButton
+          :label="$t('header.dashboard')"
+          color="white"
+          variant="flat"
+          class="mx-2"
+          @click="goToDashboard"
+        />
+      </template>
 
-    <template v-else>
-      <BaseButton
-        label="ログイン"
-        color="white"
-        variant="outlined"
-        class="mx-2"
-        @click="goToLogin"
-      />
-      <BaseButton
-        label="新規登録"
-        color="white"
-        variant="outlined"
-        class="mx-2"
-        @click="goToSignup"
-      />
-    </template>
+      <template v-else>
+        <BaseButton
+          label="ログイン"
+          color="white"
+          variant="outlined"
+          class="mx-2"
+          @click="goToLogin"
+        />
+        <BaseButton
+          label="新規登録"
+          color="white"
+          variant="outlined"
+          class="mx-2"
+          @click="goToSignup"
+        />
+      </template>
+    </client-only>
   </v-app-bar>
 </template>
 
@@ -87,7 +89,6 @@ const auth = useAuthStore();
 const gameStore = useGameStore();
 const router = useRouter();
 const route = useRoute();
-const { isLoggedIn, ready } = storeToRefs(auth);
 
 const result = computed(() => gameStore.result);
 const gameStatus = computed(() => gameStore.gameStatus);
@@ -117,10 +118,6 @@ const toGameStart = () => {
 const toRanking = () => {
   router.push("/ranking");
 };
-
-onMounted(() => {
-  const auth = useAuthStore();
-});
 </script>
 
 <style scoped lang="scss">
