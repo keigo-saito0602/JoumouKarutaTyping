@@ -44,14 +44,7 @@ const handleSignup = async () => {
   error.value = "";
 
   try {
-    await signup({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    });
-    const res = await login({ email: email.value, password: password.value });
-    auth.setUser(res.user, res.token);
-
+    await auth.signupAndLogin(name.value, email.value, password.value);
     flash.show("アカウント登録に成功しました", "success");
     await router.push("/game");
   } catch (e: any) {

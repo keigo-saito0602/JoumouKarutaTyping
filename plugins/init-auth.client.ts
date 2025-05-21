@@ -4,6 +4,7 @@ export default defineNuxtPlugin(async () => {
 
   if (!auth.user && token) {
     await auth.restoreSession();
+  } else {
+    auth.ready = true;
   }
-  auth.ready = true;
 });

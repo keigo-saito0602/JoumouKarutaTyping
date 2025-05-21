@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="formRef">
+  <v-form ref="formRef" @submit.prevent>
     <BaseTextField
       v-model="modelValueEmail"
       :label="$t('form.email')"

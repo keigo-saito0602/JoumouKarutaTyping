@@ -45,11 +45,14 @@ const handleLogin = async () => {
 
   try {
     const res = await login({ email: email.value, password: password.value });
+
     auth.setUser(res.user, res.token);
     flash.show("ログインに成功しました", "success");
+
     await router.push("/game");
   } catch (e: any) {
     error.value = e.message || "ログインに失敗しました";
+    console.error("Login failed", e);
   } finally {
     loading.value = false;
   }
