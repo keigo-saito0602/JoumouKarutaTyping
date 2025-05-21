@@ -36,8 +36,6 @@ import { createValidationRules } from "~/utils/validationRules";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
-  modelValueEmail?: string;
-  modelValuePassword?: string;
   loading?: boolean;
   error?: string;
 }>();
@@ -48,8 +46,8 @@ const emit = defineEmits<{
   (e: "submit"): void;
 }>();
 
-const modelValueEmail = defineModel<string>("email");
-const modelValuePassword = defineModel<string>("password");
+const modelValueEmail = defineModel<string | undefined>("email");
+const modelValuePassword = defineModel<string | undefined>("password");
 
 const { t } = useI18n();
 const rules = createValidationRules(t);

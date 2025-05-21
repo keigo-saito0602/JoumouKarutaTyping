@@ -17,7 +17,7 @@
 defineOptions({ name: "KarutaTextField", inheritAttrs: false });
 
 defineProps<{
-  modelValue: string;
+  modelValue: string | undefined;
   label?: string;
   type?: string;
   variant?: "outlined" | "filled" | "solo" | "plain" | "underlined";

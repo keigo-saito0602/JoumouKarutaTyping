@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { signup, login } from "~/utils/authApi";
 import { useAuthStore } from "~/stores/auth";
 import { useRouter } from "vue-router";
 import { useFlashStore } from "~/stores/flash";

@@ -18,7 +18,7 @@
               label="名前を変更する"
               class="app-button mt-4"
               color="primary"
-              @click="isEditing = true"
+              @click="startEditing"
             />
           </div>
 
@@ -53,31 +53,40 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useGameStore } from "@/stores/game";
+import { useAuthStore } from "@/stores/auth";
 import { createValidationRules } from "@/utils/validationRules";
 import KarutaButton from "@/components/parts/KarutaButton.vue";
 import KarutaTextField from "@/components/parts/KarutaTextField.vue";
 
 const gameStore = useGameStore();
+const authStore = useAuthStore();
 const { t } = useI18n();
 const rules = createValidationRules(t);
 
-// 編集モードかどうか
 const isEditing = ref(false);
 const name = ref<string>(gameStore.userName || "");
 
-// 開始ボタンの有効状態
+onMounted(() => {
+  if (authStore.user?.name) {
+    gameStore.setLogin(true, authStore.user.name);
+  }
+});
+
 const canStart = computed(() =>
   gameStore.isLogin ? true : name.value.length > 0
 );
 
-// 名前の保存（編集確定）
 const saveUserName = () => {
   if (!name.value) return;
   gameStore.setLogin(true, name.value);
   isEditing.value = false;
 };
 
-// ゲーム開始
+const startEditing = () => {
+  isEditing.value = true;
+  name.value = gameStore.userName;
+};
+
 const startGame = () => {
   if (!gameStore.isLogin && !name.value) {
     alert("ニックネームを入力してください");

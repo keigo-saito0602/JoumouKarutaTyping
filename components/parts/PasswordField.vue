@@ -4,7 +4,7 @@
     @update:model-value="emit('update:modelValue', $event)"
     :label="label"
     :type="show ? 'text' : 'password'"
-    :append-inner-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+    :append-inner-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
     @click:append-inner="toggle"
     autocomplete="new-password"
     prepend-inner-icon="mdi-lock"
@@ -18,7 +18,7 @@
 import { ref } from "vue";
 
 const props = defineProps<{
-  modelValue: string;
+  modelValue: string | undefined;
   label: string;
 }>();
 const emit = defineEmits<{
