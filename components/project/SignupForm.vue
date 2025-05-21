@@ -1,84 +1,71 @@
 <template>
-  <v-form ref="formRef" @submit.prevent="handleSignup">
+  <v-form ref="formRef">
     <BaseTextField
-      v-model="name"
+      v-model="modelValueName"
       :label="$t('form.username')"
       icon="mdi-account"
       :rules="[rules.required, rules.minLength(1)]"
       autocomplete="name"
+      class="mb-4"
     />
     <BaseTextField
-      v-model="email"
+      v-model="modelValueEmail"
       :label="$t('form.email')"
       icon="mdi-email"
       :rules="[rules.required, rules.email]"
       autocomplete="email"
+      class="mb-4"
     />
-    <BaseTextField
-      v-model="password"
+    <PasswordField
+      v-model="modelValuePassword"
       :label="$t('form.password')"
-      icon="mdi-lock"
       :rules="[rules.required, rules.minLength(6)]"
       autocomplete="new-password"
+      class="mb-4"
     />
     <BaseButton
       :label="$t('common.signup')"
       :color="'primary'"
       :loading="loading"
       :block="true"
-      :type="'submit'"
+      @click="onSubmit"
     />
     <v-alert v-if="error" type="error" class="mt-4">{{ error }}</v-alert>
   </v-form>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { signup, login } from "~/utils/authApi";
+import { ref, defineExpose } from "vue";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
+import PasswordField from "@/components/parts/PasswordField.vue";
 import BaseButton from "@/components/parts/BaseButton.vue";
-import { useI18n } from "vue-i18n";
 import { createValidationRules } from "~/utils/validationRules";
-import { useAuthStore } from "~/stores/auth";
+import { useI18n } from "vue-i18n";
+
+const props = defineProps<{
+  modelValueName?: string;
+  modelValueEmail?: string;
+  modelValuePassword?: string;
+  loading?: boolean;
+  error?: string;
+}>();
+
+const emit = defineEmits<{
+  (e: "update:modelValueName", val: string): void;
+  (e: "update:modelValueEmail", val: string): void;
+  (e: "update:modelValuePassword", val: string): void;
+  (e: "submit"): void;
+}>();
+
+const modelValueName = defineModel<string>("name");
+const modelValueEmail = defineModel<string>("email");
+const modelValuePassword = defineModel<string>("password");
 
 const { t } = useI18n();
 const rules = createValidationRules(t);
-
-const name = ref("");
-const email = ref("");
-const password = ref("");
-const error = ref("");
-const loading = ref(false);
 const formRef = ref();
 
-const auth = useAuthStore();
+const onSubmit = () => emit("submit");
 
-const handleSignup = async () => {
-  const isValid = await formRef.value?.validate();
-  if (!isValid) return;
-
-  loading.value = true;
-  error.value = "";
-
-  try {
-    await signup({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    });
-
-    const res = await login({
-      email: email.value,
-      password: password.value,
-    });
-
-    await auth.setUser(res.user, res.token);
-
-    window.location.href = "/game";
-  } catch (e: any) {
-    error.value = e.message || "登録に失敗しました";
-  } finally {
-    loading.value = false;
-  }
-};
+defineExpose({ formRef });
 </script>
