@@ -1,6 +1,8 @@
 <template>
-  <v-app>
+  <v-app v-if="authReady">
     <AppHeader />
+
+    <FlashMessage />
 
     <v-main>
       <NuxtPage />
@@ -11,23 +13,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/stores/auth";
 import AppHeader from "~/components/layout/AppHeader.vue";
 import AppFooter from "~/components/layout/AppFooter.vue";
-
-import { useAuthStore } from "~/stores/auth";
+import FlashMessage from "~/components/parts/FlashMessage.vue";
 
 const auth = useAuthStore();
-onMounted(() => {
-  auth.init();
-});
-
-// const auth = useAuthStore();
-
-// onMounted(async () => {
-//   const token = useCookie("token").value;
-
-//   if (!auth.isLoggedIn && token && !auth.user) {
-//     await auth.restoreSession();
-//   }
-// });
+const { ready: authReady } = storeToRefs(auth);
 </script>

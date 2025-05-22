@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import { useAuthStore } from "~/stores/auth";
 
 export function useLoginForm() {
   const email = ref("");

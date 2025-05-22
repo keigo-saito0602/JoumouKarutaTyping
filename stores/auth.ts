@@ -1,73 +1,11 @@
-// import { defineStore } from "pinia";
-// import { login } from "@/utils/authApi";
-
-// interface User {
-//   id: string;
-//   name: string;
-//   email: string;
-// }
-
-// export const useAuthStore = defineStore("auth", {
-//   state: () => ({
-//     user: null as User | null,
-//     token: useCookie("token").value || "",
-//     ready: false,
-//   }),
-//   getters: {
-//     isLoggedIn: (state) => !!state.user,
-//   },
-//   actions: {
-//     setUser(user: User, token: string) {
-//       this.user = user;
-//       this.token = token;
-
-//       const tokenCookie = useCookie("token");
-//       tokenCookie.value = token;
-//     },
-//     clearUser() {
-//       this.user = null;
-//       this.token = "";
-
-//       const tokenCookie = useCookie("token");
-//       tokenCookie.value = null;
-//     },
-//     async login(email: string, password: string) {
-//       const { user, token } = await login({ email, password });
-//       this.setUser(user, token);
-//     },
-//     async restoreSession() {
-//       const token = useCookie("token").value;
-//       if (!token) return;
-
-//       try {
-//         const config = useRuntimeConfig();
-//         const me = await $fetch<{ user_id: number }>(
-//           `${config.public.apiBase}/auth/me`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//             },
-//           }
-//         );
-
-//         this.setUser(
-//           {
-//             id: me.user_id.toString(),
-//             name: "ユーザー",
-//             email: "",
-//           },
-//           token
-//         );
-//       } catch {
-//         this.clearUser();
-//       }
-//       this.ready = true;
-//     },
-//   },
-// });
-
 import { defineStore } from "pinia";
-import { login } from "@/utils/authApi";
+import type { PersistenceOptions } from "pinia-plugin-persistedstate";
+import { login, signup } from "@/utils/authApi";
+import {
+  getTokenFromCookie,
+  setTokenToCookie,
+  clearTokenCookie,
+} from "@/utils/authCookie";
 
 interface User {
   id: string;
@@ -75,65 +13,80 @@ interface User {
   email: string;
 }
 
+interface AuthState {
+  user: User | null;
+  token: string;
+  ready: boolean;
+}
+
 export const useAuthStore = defineStore("auth", {
-  state: () => ({
-    user: null as User | null,
+  state: (): AuthState => ({
+    user: null,
     token: "",
     ready: false,
   }),
+
   getters: {
-    isLoggedIn: (state) => !!state.user,
+    isLoggedIn: (state): boolean => !!state.user && !!state.token,
   },
+
   actions: {
-    init() {
-      const tokenCookie = useCookie("token");
-      this.token = tokenCookie.value || "";
-    },
-    setUser(user: User, token: string) {
+    setUser(user: User, token: string): void {
       this.user = user;
       this.token = token;
-
-      const tokenCookie = useCookie("token");
-      tokenCookie.value = token;
+      setTokenToCookie(token);
+      this.ready = true;
     },
-    clearUser() {
+
+    clearUser(): void {
       this.user = null;
       this.token = "";
-
-      const tokenCookie = useCookie("token");
-      tokenCookie.value = null;
+      clearTokenCookie();
+      this.ready = true;
     },
-    async login(email: string, password: string) {
+
+    async login(email: string, password: string): Promise<void> {
       const { user, token } = await login({ email, password });
       this.setUser(user, token);
     },
-    async restoreSession() {
-      const token = this.token;
-      if (!token) return;
 
+    async signupAndLogin(
+      name: string,
+      email: string,
+      password: string
+    ): Promise<void> {
+      await signup({ name, email, password });
+      await this.login(email, password);
+    },
+
+    async restoreSession(): Promise<void> {
       try {
-        const config = useRuntimeConfig();
-        const me = await $fetch<{ user_id: number }>(
-          `${config.public.apiBase}/auth/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const token = getTokenFromCookie();
+        if (!token) {
+          this.ready = true;
+          return;
+        }
 
-        this.setUser(
-          {
-            id: me.user_id.toString(),
-            name: "ユーザー",
-            email: "",
+        const {
+          public: { apiBase },
+        } = useRuntimeConfig();
+        const me = await $fetch<User>(`${apiBase}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          token
-        );
-      } catch {
+        });
+
+        this.setUser(me, token);
+      } catch (e) {
+        console.error("[restoreSession] error", e);
         this.clearUser();
+      } finally {
+        this.ready = true;
       }
-      this.ready = true;
     },
   },
+
+  persist: {
+    paths: ["user", "token"],
+  } as PersistenceOptions,
 });

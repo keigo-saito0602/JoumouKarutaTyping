@@ -3,7 +3,7 @@ export const COLORS = {
   secondary: "#35495e",
   third: "#aab6c3",
   error: "#ff5252",
-  success: "#4caf50",
+  success: "#42b883",
   warning: "#fb8c00",
   info: "#2196f3",
   background: "#f5f5f5",
