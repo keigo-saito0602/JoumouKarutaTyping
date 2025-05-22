@@ -13,15 +13,18 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  label?: string;
-  color?: string;
-  loading?: boolean;
-  block?: boolean;
-  type?: "button" | "submit" | "reset";
-  variant?: "elevated" | "flat" | "tonal" | "outlined" | "text" | "plain";
-  icon?: string;
-}>();
+defineProps({
+  label: String,
+  color: String,
+  loading: Boolean,
+  block: Boolean,
+  type: {
+    type: String as PropType<"button" | "submit" | "reset">,
+    default: "button",
+  },
+  variant: String,
+  icon: String,
+});
 </script>
 
 <style scoped lang="scss">

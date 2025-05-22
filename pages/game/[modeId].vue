@@ -21,7 +21,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/auth";
 import { useGameStore } from "@/stores/game";
 import BaseButton from "@/components/parts/BaseButton.vue";
-
 import KarutaCollectorApp from "~/components/gameModes/typing/KarutaTyping.vue";
 
 const auth = useAuthStore();
