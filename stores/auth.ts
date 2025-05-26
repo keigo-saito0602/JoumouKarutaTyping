@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { PersistenceOptions } from "pinia-plugin-persistedstate";
-import { login, signup } from "@/utils/authApi";
+import { login, signup } from "~/services/authApi";
 import {
   getTokenFromCookie,
   setTokenToCookie,
