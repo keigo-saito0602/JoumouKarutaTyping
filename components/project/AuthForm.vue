@@ -1,41 +1,42 @@
 <template>
   <v-form ref="formRef">
     <BaseTextField
+      v-if="isSignup"
       v-model="modelValueName"
       :label="$t('form.username')"
       icon="mdi-account"
       :rules="[rules.required, rules.minLength(1)]"
-      autocomplete="name"
       class="mb-4"
+      autocomplete="name"
     />
     <BaseTextField
       v-model="modelValueEmail"
       :label="$t('form.email')"
       icon="mdi-email"
       :rules="[rules.required, rules.email]"
-      autocomplete="email"
       class="mb-4"
+      autocomplete="email"
     />
     <PasswordField
       v-model="modelValuePassword"
       :label="$t('form.password')"
       :rules="[rules.required, rules.minLength(6)]"
-      autocomplete="new-password"
       class="mb-4"
+      autocomplete="new-password"
     />
     <BaseButton
-      :label="$t('common.signup')"
-      :color="'primary'"
+      :label="buttonLabel"
       :loading="loading"
       :block="true"
-      @click="onSubmit"
+      color="primary"
+      @click="emit('submit')"
     />
     <v-alert v-if="error" type="error" class="mt-4">{{ error }}</v-alert>
   </v-form>
 </template>
 
 <script setup lang="ts">
-import { ref, defineExpose } from "vue";
+import { ref, computed, defineExpose } from "vue";
 import BaseTextField from "@/components/parts/BaseTextField.vue";
 import PasswordField from "@/components/parts/PasswordField.vue";
 import BaseButton from "@/components/parts/BaseButton.vue";
@@ -43,9 +44,7 @@ import { createValidationRules } from "~/utils/validationRules";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
-  modelValueName?: string;
-  modelValueEmail?: string;
-  modelValuePassword?: string;
+  mode: "login" | "signup";
   loading?: boolean;
   error?: string;
 }>();
@@ -65,7 +64,10 @@ const { t } = useI18n();
 const rules = createValidationRules(t);
 const formRef = ref();
 
-const onSubmit = () => emit("submit");
+const isSignup = computed(() => props.mode === "signup");
+const buttonLabel = computed(() =>
+  isSignup.value ? t("common.signup") : t("common.login")
+);
 
 defineExpose({ formRef });
 </script>
