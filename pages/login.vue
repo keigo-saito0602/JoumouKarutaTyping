@@ -5,12 +5,10 @@
       <v-card-text>
         <LoginForm
           ref="formRef"
-          v-model:email="email"
-          v-model:password="password"
+          v-model:email="form.email"
+          v-model:password="form.password"
           :loading="loading"
           :error="error"
-          @update:email="email = $event"
-          @update:password="password = $event"
           @submit="handleLogin"
         />
       </v-card-text>
@@ -26,8 +24,11 @@ import { useRouter } from "vue-router";
 import { useFlashStore } from "~/stores/flash";
 import LoginForm from "@/components/project/LoginForm.vue";
 
-const email = ref("");
-const password = ref("");
+const form = reactive({
+  email: "",
+  password: "",
+});
+
 const error = ref("");
 const loading = ref(false);
 const formRef = ref();
@@ -44,7 +45,7 @@ const handleLogin = async () => {
   error.value = "";
 
   try {
-    const res = await login({ email: email.value, password: password.value });
+    const res = await login({ email: form.email, password: form.password });
 
     auth.setUser(res.user, res.token);
     flash.show("ログインに成功しました", "success");

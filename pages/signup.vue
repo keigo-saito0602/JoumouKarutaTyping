@@ -5,9 +5,9 @@
       <v-card-text>
         <SignupForm
           ref="formRef"
-          v-model:name="name"
-          v-model:email="email"
-          v-model:password="password"
+          v-model:name="form.name"
+          v-model:email="form.email"
+          v-model:password="form.password"
           :loading="loading"
           :error="error"
           @submit="handleSignup"
@@ -24,9 +24,12 @@ import { useRouter } from "vue-router";
 import { useFlashStore } from "~/stores/flash";
 import SignupForm from "@/components/project/SignupForm.vue";
 
-const name = ref("");
-const email = ref("");
-const password = ref("");
+const form = reactive({
+  name: "",
+  email: "",
+  password: "",
+});
+
 const error = ref("");
 const loading = ref(false);
 const formRef = ref();
@@ -43,7 +46,7 @@ const handleSignup = async () => {
   error.value = "";
 
   try {
-    await auth.signupAndLogin(name.value, email.value, password.value);
+    await auth.signupAndLogin(form.name, form.email, form.password);
     flash.show("アカウント登録に成功しました", "success");
     await router.push("/game");
   } catch (e: any) {
