@@ -3,8 +3,8 @@
     <v-card width="400">
       <v-card-title class="text-h6">ログイン</v-card-title>
       <v-card-text>
-        <LoginForm
-          ref="formRef"
+        <AuthForm
+          mode="login"
           v-model:email="form.email"
           v-model:password="form.password"
           :loading="loading"
@@ -22,7 +22,7 @@ import { login } from "~/utils/authApi";
 import { useAuthStore } from "~/stores/auth";
 import { useRouter } from "vue-router";
 import { useFlashStore } from "~/stores/flash";
-import LoginForm from "@/components/project/LoginForm.vue";
+import AuthForm from "@/components/project/AuthForm.vue";
 
 const form = reactive({
   email: "",

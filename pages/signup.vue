@@ -3,8 +3,8 @@
     <v-card width="400">
       <v-card-title class="text-h6">{{ $t("common.signup") }}</v-card-title>
       <v-card-text>
-        <SignupForm
-          ref="formRef"
+        <AuthForm
+          mode="signup"
           v-model:name="form.name"
           v-model:email="form.email"
           v-model:password="form.password"
@@ -22,7 +22,7 @@ import { ref } from "vue";
 import { useAuthStore } from "~/stores/auth";
 import { useRouter } from "vue-router";
 import { useFlashStore } from "~/stores/flash";
-import SignupForm from "@/components/project/SignupForm.vue";
+import AuthForm from "@/components/project/AuthForm.vue";
 
 const form = reactive({
   name: "",
