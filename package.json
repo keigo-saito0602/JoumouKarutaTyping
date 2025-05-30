@@ -8,7 +8,14 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "prepare": "husky install",
     "lint": "eslint . --ext .ts,.js,.vue"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -28,10 +35,12 @@
     "@types/node": "^22.14.0",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.29.1",
-    "eslint": "^9.24.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-vue": "^10.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "sass": "^1.86.3",
     "sass-loader": "^16.0.5",
