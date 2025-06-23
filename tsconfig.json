@@ -2,7 +2,7 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "node",
-    "types": ["node", "@nuxtjs/i18n"],
+    "types": ["node", "@nuxtjs/i18n", "vitest"],
     "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "~/*": ["./*"],
